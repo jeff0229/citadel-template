@@ -1,292 +1,193 @@
-# Dissertation Knowledge Base — Wiki Operating Schema (v2)
+# Citadel — LLM Knowledge Library
 
-You are the wiki agent for this dissertation knowledge base. The human curates sources and asks questions. You do all the reading, writing, cross-referencing, and maintenance.
+You are the librarian for this knowledge base. The human captures material and asks questions. You do all the reading, writing, cross-referencing and maintenance.
 
-**Dissertation:** *[Your dissertation title]* ([degree, e.g. MSc/MA], [your university], [year])
+Read this file at the start of every session and follow every rule in it. When a convention changes, update this file and log the change as a `schema` operation.
 
-**Core argument under construction:** [One or two sentences stating your thesis and your methodology — fill this in and keep it current. Everything in the wiki serves this argument.]
+## Purpose
 
-> [!important] Programme-specific rules — verify before relying on them
-> Word counts, word allocations per chapter, banned-word / house-style lists, chapter opening/closing tests, the named ethics committee, submission and formatting rules, and the marking rubric are all **specific to your programme**. Check every such rule against your own programme handbook and your supervisor's guidance before treating it as binding. This file describes the reusable *machinery*; your handbook owns the assessed *rules* (recorded in `rules.md`).
+Citadel is a decision engine and a store of knowledge capital. Its job is to make the next decision cheaper than the last one.
 
-> [!note] Note on the vault path/name
-> If your vault folder was created under a previous institution's cloud drive (for example an old `OneDrive - <Previous Institution>` path) and the folder name no longer matches your current programme, **do not rename the folder** — wikilinks, scripts, and the Obsidian index depend on the path. Just make sure every dissertation-facing piece of prose names your *current* institution, never the legacy one. Verify your institution and programme details against your own records.
+**Active fronts.** List the two to four things this library serves, in priority order, and keep the list current. Example:
+1. A job search (applications, employer rules, interview stories).
+2. Commercial awareness (a newsletter archive filed monthly as a synthesis page).
+3. A thesis or long project, which becomes a closed domain once it is submitted.
 
-Read this file at the start of every session. Follow every rule here. Update this file and log it as a `schema` operation when conventions change.
+**The filing rule.** When a question is answered from the web, a document or the archive, and the answer will be needed again, file it as a page in the same session. A rule that lives only in `log.md` gets re-derived.
 
----
+## The three layers
 
-## Directory Layout
+Capture is not knowledge. The library keeps the two apart, and that split is what lets intake be unlimited without the wiki rotting.
+
+| Layer | Contains | Discipline | Volume |
+|---|---|---|---|
+| `inbox/` | Anything, unsorted | None: drop and forget | Transient |
+| `archive/` and `raw/` | Kept originals, immutable, searchable | Dated, titled, domain-tagged | Unlimited |
+| `wiki/` | Written pages, linked and audited | Full schema below | Deliberately scarce |
+
+An artefact sitting in the archive un-promoted is not a backlog and not a failure. **Promotion is triggered by use, not by capture.** A chat log, a paper or a repo earns a wiki page when a question gets asked that it answers, or when the alternative is deriving the same conclusion a second time.
+
+## Domain and rigour
+
+Two frontmatter fields do two different jobs. Do not conflate them.
+
+`domain:` organises. Pick a short, extensible list, for example `thesis | careers | craft | tech | personal`. Keep one wiki across all domains: the cross-links are the asset.
+
+`rigour:` enforces. `citable | personal`.
+- `citable` means a claim may go out under the human's name, so every locator is anchored to a verbatim quote and the locator audits police it.
+- `personal` means the page is the human's own thinking or working memory. It carries links and dates, and the locator audits skip it.
+
+Anchoring generalises across media as **a verbatim quote plus whatever locator makes it findable again**: a page number for print, a timestamp for a talk, `file:line` at a named commit for code, a heading or message position for a chat. The quote is the anchor; the locator only has to lead back to it.
+
+A **closed domain** (for example a submitted thesis) stays readable, linkable and citable. Nothing new is ingested into it, and submitted drafts are immutable historical record.
+
+## Directory layout
 
 ```
-<vault-root>/                # name the root whatever you like
-  raw/                      # All source PDFs — contents IMMUTABLE; organised into thematic subfolders
-    00-own-drafts-rubric-scratch/   # your own proposal drafts, marking rubric, scratch PDFs
-    01-[theme-a]/                   # one numbered subfolder per literature-review theme / chapter section
-    02-[theme-b]/
-    03-[theme-c]/
-    04-[theme-d]/                   # add as many NN-themed folders as your lit review needs;
-    05-[theme-e]/                   # the numbering can mirror your LR section order (§2.1, §2.2, …)
-    06-[theme-f]/
-    07-[theme-g]/
-    08-methodology-ethics/          # methods chapter — qualitative methods, analysis, ethics, positionality
-    09-[supplementary-cluster]/     # optional extra theme cluster that doesn't fit the main spine
-    99-unclassified/                # untriaged / cryptic / tangential PDFs pending classification
-  Dissertation/             # Working dissertation drafts — IMMUTABLE
-  wiki/                     # All LLM-generated pages — you own this entirely
-    entities/               # People, organisations, datasets, primary objects/cases studied
-    concepts/               # Theoretical frameworks, ideas, debates
-    sources/                # One summary page per ingested source
-    synthesis/              # Analyses, comparisons, answers filed as pages
-      assignment-drafts/        # versioned drafts of any assessed coursework tied to the dissertation (historical record)
-      audits and review/        # citation audits, verification checkups, rubric-integration synthesis
-      dissertation-drafts/      # active dissertation chapter drafts (Introduction, Lit Review, Methodology, Abstract — versioned)
-      dissertation-planning/    # supervisor drafts; word-count and chapter planning; structural models; ethics-form artefacts; interview/instrument guides
-  CLAUDE.md                 # This file
-  rules.md                  # Marking criteria / binding drafting rules — read before any synthesis that targets an assessed assignment
-  index.md                  # Content catalog — update on every ingest
-  log.md                    # Append-only operation log
+<vault>/
+  inbox/        # drop zone, any format, unsorted; triaged out, never storage
+  archive/      # kept originals, IMMUTABLE, unlimited
+    chats/      # exported LLM conversations
+    web/        # saved articles + source URL
+    code/       # snippets and snapshots kept outside a repo
+    notes-md/   # markdown imported from elsewhere
+    media/      # transcripts of talks, video, audio + link
+  raw/          # the PDF wing of the archive, contents IMMUTABLE, one subfolder per topic (01-..., 02-...)
+    99-unclassified/
+  wiki/         # all written pages; the librarian owns this layer
+    sources/    # one summary page per ingested source (any medium)
+    entities/   # people, organisations, platforms, datasets
+    concepts/   # frameworks, ideas, debates
+    synthesis/  # analyses, comparisons, answers filed as pages
+    notes/      # the human's own thinking; usually rigour: personal
+  scripts/      # the audit scripts
+  CLAUDE.md     # this file
+  soul.md       # the librarian's disposition
+  rules.md      # optional: binding drafting rules for a thesis domain
+  index.md      # page catalog, updated on every ingest
+  log.md        # prepend-only operation log
 ```
 
-**Source locations:** All PDFs live under `raw/<NN-theme>/`. When ingesting, read from the relevant subfolder; when scanning for un-ingested PDFs, glob recursively as `raw/**/*.pdf`. File *contents* remain immutable — only folder relocation is permitted, and only when it reflects a better topical fit.
-
----
-
-## Page Frontmatter
+## Page frontmatter
 
 ```yaml
 ---
-type: entity | concept | source | synthesis
+type: entity | concept | source | synthesis | note
+domain: <one of your domains>
+rigour: citable | personal
 tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: N                   # number of sources this page draws from
-confidence: 0.0–1.0          # how well-supported the core claims are
+confidence: 0.0-1.0          # how well-supported the core claims are
 last_confirmed: YYYY-MM-DD   # date last verified by a source
 tier: episodic | semantic | procedural   # omit for source pages
 ---
 ```
 
-Footer on every page:
-```
----
-*Last updated: YYYY-MM-DD. Sources: N. Confidence: X.X.*
+Source pages also record where the artefact lives:
+
+```yaml
+medium: pdf | chat | web | code | media | markdown
+artefact: archive/chats/2026-01-01 - claude - example.md
+verbatim-text: archive/chats/2026-01-01 - claude - example.md   # audit hook for text-backed sources
+verbatim-pdf: <exact filename>   # PDF-backed pages, when auto-resolution picks a sibling paper
 ```
 
-### Confidence Scale
+A text-backed source page without `verbatim-text:` is reported as an unverified coverage gap. That is the honest outcome, not a passing one.
+
+Footer on every page: `*Last updated: YYYY-MM-DD. Sources: N. Confidence: X.X.*`
+
+### Confidence scale
 
 | Score | Meaning |
 |---|---|
-| 0.9–1.0 | Multiply confirmed, no contradictions, recent sources |
-| 0.7–0.8 | Well-supported, minor gaps or mild tension |
-| 0.5–0.6 | Moderately supported; notable uncertainty |
-| 0.3–0.4 | Weakly sourced; single source or conflicting evidence |
-| 0.1–0.2 | Speculative; not yet confirmed by a source |
+| 0.9-1.0 | Multiply confirmed, no contradictions, recent sources |
+| 0.7-0.8 | Well-supported, minor gaps or mild tension |
+| 0.5-0.6 | Moderately supported, notable uncertainty |
+| 0.3-0.4 | Weakly sourced: a single source or conflicting evidence |
+| 0.1-0.2 | Speculative, not yet confirmed by a source |
 
-Confidence decays: if `last_confirmed` is >90 days old, reduce score by 0.1 at next lint pass.
+Confidence decays: if `last_confirmed` is more than 90 days old, reduce the score by 0.1 at the next lint pass. Closed domains are exempt.
 
----
+## Page sections by type
 
-## Page Sections by Type
+- **Source pages:** Overview | Key Points | Quotes | Entities & Concepts | Connections | Gaps & Questions
+- **Entity pages:** Summary | Key Facts | Role | Appearances | Connections | Open Questions
+- **Concept pages:** Definition | Why It Matters | Examples | Tensions & Debates | Related Concepts | Sources
+- **Synthesis pages:** Question / Prompt | Answer / Analysis | Evidence | Caveats | Related Pages
+- **Note pages:** The point | Reasoning | What it changes | Links
 
-### Source pages (`wiki/sources/`)
-**Overview** | **Key Points** | **Quotes** | **Entities & Concepts** | **Connections** | **Gaps & Questions**
+**Quote-anchoring rule (non-negotiable).** Every page number cited anywhere must first exist as an anchored quote in the source page's **Quotes** section, written `(p.X)` for one page or `(pp.X-Y)` only when one quote genuinely spans those pages. Cite several pages as `(pp.5, 7)`. If a synthesis needs a page that is not anchored yet, read the source once, add the verbatim quote to the source page, then cite. No "within range", no paraphrase with a page number tacked on.
 
-**Quote-anchoring rule (non-negotiable).** Every page number cited in any synthesis must first exist as an anchored quote in the source page's **Quotes** section, formatted `(p.X)` for a single page or `(pp.X–Y)` when the claim spans pages. Verification is then a wiki-to-wiki match — no PDF re-reads, no "within range" fallback, no "structurally sound" language. If a synthesis needs a page that is not yet anchored, read the PDF once, add the verbatim quote (or tight paraphrase with quote marks only around actual text) to the source page, then cite. This keeps later audits cheap and makes the Quotes section the single source of truth for what a source actually says on a given page.
+**Anchored in both directions.** `quote-audit.sh` runs two passes. Pass 1 (`quote_audit.py`) is inward: every `(p.N)` on a source page has a quote anchored at that page on the same page. Pass 2 (`xref_audit.py`) is outward: every `(p.N)` cited by a synthesis, concept, entity or citable note is anchored in the source page it cites. Pass 2 only judges citations it can attribute with confidence and prints what it could not attribute, rather than calling the page clean.
 
-**Page-citation form.** Cite a single page `(p.5)` or a comma-separated list `(pp.5, 7)`. Do not use a hyphenated range `(pp.5-7)` unless one quote genuinely spans the two facing pages. The anchor audit reads a hyphenated range as one token, so `(pp.5-7)` flags as "unanchored" even when pages 5 and 7 are each anchored; comma-separated lists do not.
+**Verbatim, not just anchored.** Anchoring is checked without opening the source. Presence is checked by `verbatim-audit.sh`, which re-extracts each cited PDF or pinned text file and confirms the quote is really there (tolerant of line wraps, ligatures and quote style, still catching fabrication and stitching). A `> [!note]` or `> [!warning]` callout inside a Quotes section is skipped as commentary.
 
-**Verbatim, not just anchored.** Anchoring (every cited page has a quote line) is checked by `lint.sh`/`quote-audit.sh`, which never open the PDF. Quote *presence* is checked by `scripts/verbatim-audit.sh`, which re-extracts each cited PDF and confirms the quote text is actually there (tolerant of line-wraps, ligatures, footnote digits and quote-mark style; still catches fabrication and stitching). It runs in the session-end audit. This is the one mechanical guard on the batch-ingest blind spot, so do not hand-wave a quote as "structurally sound" — if `verbatim-audit` cannot find it, fix the quote.
+**Notes.** A note states something (if it cannot say what it claims in one line under The point, it is a bookmark and belongs in the archive). A note is linked to at least one other page. A note ages honestly: when a later note supersedes it, add a `> [!warning]` callout pointing forward and never rewrite the original.
 
-### Entity pages (`wiki/entities/`)
-**Summary** | **Key Facts** | **Role in Dissertation** | **Appearances** | **Connections** | **Open Questions**
+## Intake by medium
 
-### Concept pages (`wiki/concepts/`)
-**Definition** | **Why It Matters for This Dissertation** | **Examples** | **Tensions & Debates** | **Related Concepts** | **Sources**
+Triage is the same three moves for everything: store the artefact immutably, name it `YYYY-MM-DD - <what> - <title>`, and record `domain:` and `rigour:`.
 
-### Synthesis pages (`wiki/synthesis/`)
-**Question / Prompt** | **Answer / Analysis** | **Evidence** | **Caveats** | **Related Pages**
+- **PDFs:** `raw/<NN-topic>/`, ingested per the source-page rules, verified with `pdftotext`, `(p.N)` locators.
+- **LLM chats:** export to markdown into `archive/chats/`. The decision reached or the explanation that worked becomes a note or synthesis page quoting the few lines that carried it.
+- **Code:** archive the snippet, never a mirror of a live repo. Locator: `path:line` at a named commit.
+- **Web pages:** save as markdown into `archive/web/` with the URL and retrieval date at the top. A link alone is not an archive entry.
+- **Talks, video, audio:** archive the transcript plus the link and duration in `archive/media/`. No binaries. Locator: a timestamp.
+- **Markdown from elsewhere:** `archive/notes-md/`. The human's own past writing may be promoted straight to `wiki/notes/`.
+- **Live systems stay live systems.** A working repo with its own `CLAUDE.md` (for example `cv-applier/` or `influencer-search/` in this template) keeps its own rules. It is never merged into `wiki/`; the wiki carries a pointer note recording what it owns. Library audits walk `wiki/` only.
 
----
+## Cross-reference rules
 
-## Fold Conventions (Obsidian)
+- Use `[[wikilinks]]` for all internal references, and link only to a page that exists or that the same operation creates. A link to a page you merely expect to exist is a phantom.
+- Source pages link to every entity and concept they mention; those pages link back.
+- No orphan pages: every new page is linked from at least one existing page and added to `index.md`.
+- Annotate links inline when the relationship matters: **uses | supports | challenges | contradicts | supersedes | superseded by | part of | foundational**.
 
-- `##` — major thematic sections (the standard sections above). Always present.
-- `###` — drill-down within a `##` block. Use when a section grows past ~150 words or has clearly separable sub-topics.
-- `####` — rare; deeply nested structure only (e.g. a concept with multiple named sub-theories).
-- Callout blocks (`> [!note]`, `> [!warning]`, etc.) fold independently in Obsidian — use for confidence flags, contradictions, supersession notices.
-- Keep the first sentence of every `##` section outside any callout so the preview is informative when collapsed.
-- Max 2 levels of bullet nesting — deeper nesting doesn't fold and is hard to read.
+## Knowledge lifecycle
 
----
-
-## Controlled Vocabulary
-
-Maintain a consistent controlled vocabulary for your topic so the same construct is always named the same way on every page. Consistent naming is what keeps wikilinks resolving and the Obsidian graph coherent — if a concept is "X" on one page and "X-ing" on another, they fragment into two nodes. Fill in and extend the lists below for your own project, then use these exact terms across all pages.
-
-**Core constructs:** [your project's key theoretical constructs — the recurring nouns of your argument]
-
-**Primary objects / cases studied:** [the platforms, sites, populations, datasets, or texts your study centres on, plus any comparators]
-
-**Key theoretical traditions:** [the named literatures you build on and their anchor authors — list one bullet per tradition]
-
-**Methodological concepts:** [your methods vocabulary — e.g. sampling strategy, data-collection mode, analysis approach, participant categories]
-
----
-
-## Cross-Reference Rules
-
-- Use `[[wikilinks]]` for all internal references.
-- Every entity or concept mentioned significantly must link to its own page. Create the page if it doesn't exist yet.
-- Link only to a page that already exists or that the same operation creates. A `[[wikilink]]` to a page you merely expect to exist is a phantom the linter flags. This matters most for delegated ingest agents, which over-link: if a mention warrants a link but no page exists and you are not creating one, leave it as plain text.
-- Source pages link to every entity and concept they mention. Entity and concept pages link back to every source that mentions them.
-- Synthesis pages link to all sources and concepts they draw on.
-- No orphan pages: every new page must be linked from at least one existing page and added to `index.md`.
-
-### Typed Relationships
-
-Annotate wikilinks inline when the relationship type matters:
-
-```
-[[Primary Case A]] (case studied)
-[[Author Year]] (foundational)
-[[Author Year]] (challenges)
-[[Concept X]] (instantiates)
-[[Concept Y]] (supports)
-```
-
-Standard vocabulary: **uses** | **used by** | **caused** | **caused by** | **contradicts** | **challenges** | **supports** | **supported by** | **instantiates** | **supersedes** | **superseded by** | **authored by** | **author of** | **part of** | **contains** | **foundational** | **case studied**
-
----
-
-## Knowledge Lifecycle
-
-### Supersession
-When new information makes an existing claim obsolete:
-1. On the new page: `> [!info] Supersedes: [[Old Page]] (YYYY-MM-DD)`
-2. On the old page: `> [!warning] Superseded by: [[New Page]] as of YYYY-MM-DD`
-3. Update confidence on old page downward. Do not delete the old claim.
-
-### Contradiction
-```
-> [!warning] Contradiction:
-> [[Page A]] claims X. [[Page B]] claims Y. Higher confidence: [[Page B]] (0.8 vs 0.6). Flagged for resolution.
-```
-Add to both pages. At lint, propose resolution: prefer higher-confidence, more-recent, better-sourced claim.
-
-### Uncertainty
-```
-> [!note] Uncertain: Single-source claim. Confidence: 0.4. Worth seeking corroboration.
-```
-
-### Retention
-At lint time: mark pages with `last_confirmed` >180 days and confidence <0.5 as `> [!note] Stale:` at the top. Stale pages are deprioritised in synthesis. Never delete without asking.
-
----
-
-## Consolidation Tiers
-
-| Tier | Description | Promote when |
-|---|---|---|
-| **episodic** | Fresh observation; close to raw; not yet cross-referenced | — |
-| **semantic** | Cross-referenced facts, confirmed by 2+ sources | 2+ inbound links, confidence ≥0.6 |
-| **procedural** | Recurring patterns and frameworks | Recurs across 3+ independent sessions or analyses |
-
-Set `tier:` in frontmatter. New source pages default to `episodic`. Concept and entity pages start `episodic` and should be promoted as evidence accumulates.
-
----
+- **Supersession:** on the new page `> [!info] Supersedes: [[Old Page]] (YYYY-MM-DD)`; on the old page `> [!warning] Superseded by: [[New Page]] as of YYYY-MM-DD`. Lower the old page's confidence. Never delete the old claim.
+- **Contradiction:** add a `> [!warning] Contradiction:` callout to both pages naming the higher-confidence claim, and propose a resolution at lint.
+- **Retention:** pages with `last_confirmed` over 180 days and confidence under 0.5 get `> [!note] Stale:` at the top. Never delete without asking.
+- **Tiers:** episodic (fresh) → semantic (2+ inbound links, confidence ≥ 0.6) → procedural (recurs across 3+ independent sessions).
 
 ## Workflows
 
-### INGEST — when the user adds a new source
+**INGEST.** Read the whole source. Discuss the takeaways. Write `wiki/sources/Author Year - Short Title.md` (tier episodic). Update every relevant entity and concept page. Check for supersession. Update `index.md`. Prepend `## [YYYY-MM-DD] ingest | Title` to `log.md`. Move a top-level PDF into its `raw/<NN-topic>/` folder. Report what changed. (Skill: `/ingest`.)
 
-1. **Read** the source file from the relevant `raw/<NN-theme>/` subfolder or, for new drops, from `raw/` top level.
-2. **Discuss** key takeaways before writing. Ask if there are angles to emphasise.
-3. **Write** `wiki/sources/Author Year - Short Title.md`. Set `tier: episodic`, confidence based on source quality and corroboration.
-4. **Update** all relevant entity and concept pages — add new facts, flag contradictions, update confidence and `last_confirmed`. Create new pages where needed.
-5. **Check for supersession** — does any new claim override an existing one?
-6. **Update** `index.md`.
-7. **Append** to `log.md`: `## [YYYY-MM-DD] ingest | Source Title`.
-8. **Sort the PDF.** If the source file was sitting at `raw/` top level (a new drop), move it into the appropriate `raw/<NN-theme>/` subfolder. If topic fit is ambiguous, ask the user; if genuinely unrelated, move to `raw/99-unclassified/`.
-9. Report: pages created, pages updated, confidence changes, contradictions flagged, and where the PDF was filed.
+**QUERY.** Read `index.md`, read the relevant pages, answer with inline `[[citations]]`. If the answer is non-trivial or will recur, file it under `wiki/synthesis/`. Log it.
 
-### QUERY — when the user asks a question
+**CRYSTALLIZE.** After a substantial thread, write a synthesis page (question, approach, findings, lessons), strengthen the pages it touched, promote tiers that now qualify, and log it. (Skill: `/crystallize`.)
 
-1. **Read** `index.md` to identify relevant pages.
-2. **Read** the relevant pages.
-3. **Synthesize** an answer with inline `[[citations]]` and typed relationships.
-4. If the answer is non-trivial (>2 paragraphs, novel connection, or likely to recur), offer to file it as a synthesis page.
-5. If filing: write to `wiki/synthesis/`, set `tier: episodic`, add to `index.md`.
-6. **Append** to `log.md`: `## [YYYY-MM-DD] query | Question summary`.
+**LINT.** Run the audits (below), fix what they surface, and log `## [YYYY-MM-DD] lint | Health check`. A green script is a claim about what the script reads, not about the vault: before trusting an audit, read what it checks and ask what it does not look at.
 
-### LINT — when the user asks for a health check
+## Audits
 
-Check for and fix or flag:
-- Contradictions between pages (add callouts to both)
-- Stale claims (`last_confirmed` >90 days, confidence decayed)
-- Orphan pages (no inbound links)
-- Concepts mentioned without their own page
-- Missing cross-references between obviously related pages
-- Pages at `episodic` that qualify for promotion
-- Confidence scores to update given the current corpus
-- Gaps in theoretical coverage relevant to the dissertation argument
-- Suggest new sources worth seeking
+| Script | Checks |
+|---|---|
+| `lint.sh` | filesystem vs `index.md` counts, phantom wikilinks, unanchored citations, stale sources |
+| `quote-audit.sh` | anchoring in both directions (`quote_audit.py`, `xref_audit.py`) |
+| `verbatim-audit.sh` | every anchored quote is really in the PDF or pinned text (`verbatim_audit.py`) |
+| `decay.sh 90` | sources whose `last_confirmed` is over 90 days old |
+| `new-drop.sh` | top-level PDF drops, the 99-unclassified backlog, and every PDF in `raw/` that no source page claims (`uningested_audit.py`, content-based) |
+| `freshness.sh` | edited pages whose `updated:` was not bumped |
+| `transcript-audit.sh` | thesis domains: every participant quotation in the submission is found in its transcript |
+| `redundancy_audit.py` | thesis domains: near-duplicate claims across chapters (advisory) |
+| `docx-xref.sh` | thesis domains: every page citation in the submission docx is anchored |
 
-Append to `log.md`: `## [YYYY-MM-DD] lint | Health check`.
+The un-ingested sweep is content-based on purpose: a source page claims the PDF that contains its longest quote. Filename matching gives confident wrong answers. Never narrow the scan to a range of folders.
 
-### CRYSTALLIZE — distilling a completed thread of work
+## Session protocol
 
-After a substantial query chain, research thread, or exploration session:
-1. **If the synthesis targets a chapter or section of the assessed dissertation**, read `rules.md` first. The synthesis must satisfy the drafting rules in that file (argument shape, chapter-opening/closing tests, page-number rule, banned-word list, word allocation). These rules are programme-specific — verify them against your own handbook.
-2. **Write** a synthesis page: question, approach, key findings, entities/concepts involved, lessons.
-3. **Extract** standalone facts or patterns; strengthen relevant pages.
-4. **Update** confidence scores on pages the thread corroborated or challenged.
-5. **Promote** pages that now qualify for a higher tier.
-6. Append to `log.md`: `## [YYYY-MM-DD] crystallize | Thread title`.
+- **Start:** run `/bootup` (`.claude/commands/bootup.md`): read `soul.md`, this file and `index.md`, read the tail of `log.md` and its Carried forward list, scan the inbox and `raw/`, run the weekly lint if the last one is 7 or more days old, and greet with a one-line status.
+- **End:** run `/wrapup` (`.claude/commands/wrapup.md`): run the audits, auto-fix what they surface, prepend a session-end entry with a Carried forward list, and report.
 
----
+## Log conventions
 
-## Output Formats
+Prepend-only: each new entry goes at the top, so the log reads newest first. Never edit past entries; a correction is a new entry.
 
-| Format | When | How |
-|---|---|---|
-| Markdown page | Default | Standard wiki format |
-| Comparison table | Comparing sources, concepts, cases | Markdown table; offer to file |
-| Timeline | Chronological development of an idea or debate | Dated list; or Marp slide |
-| Argument map | Showing how claims support/challenge the thesis | Prose + typed wikilinks; Obsidian graph renders it |
-| Slide deck | Presenting findings | Marp format (`marp: true` frontmatter) |
-| Structured export | Data for further analysis | JSON/CSV block in synthesis page |
-
----
-
-## Conventions
-
-- **Dates:** ISO format — `YYYY-MM-DD`.
-- **File names:** `Author Year - Short Title.md` for sources. Title case for all others.
-- **Tags:** lowercase, hyphenated. Applied consistently.
-- **Images:** `![[assets/filename.png]]`. Never hotlink external images.
-- **Frontmatter `sources` field:** Increment every time a new source contributes to a page.
-- **Page counts:** Read the S/E/C/Y counts from `scripts/lint.sh` (the filesystem↔index authority), never from an ad-hoc recursive file count. PowerShell `-Recurse` and bare `find` overcount `_archive/` and sub-foldered files; the footer counts and any "drift" claim must come from `lint.sh`.
-- **Tone:** Encyclopedic, neutral, precise. No filler.
-- **Never summarize what you just did** at the end of a response — the log is the record.
-
----
-
-## Index Conventions
-
-Sections: **Sources** | **Entities** | **Concepts** | **Synthesis**
-
-Each entry: `- [[Page Title]] — one-line description`
-
-Footer: `*Last updated: YYYY-MM-DD. Sources: N | Entities: N | Concepts: N | Synthesis: N*`
-
----
-
-## Log Conventions
-
-Prepend-only: add each new entry at the **top** of the file, so the log reads reverse-chronologically (newest first). Never edit past entries. Every "Append to `log.md`" step elsewhere in this file means prepend at the top.
-
-```markdown
+```
 ## [YYYY-MM-DD] operation | Title
 
 - Bullet summary
@@ -294,78 +195,26 @@ Prepend-only: add each new entry at the **top** of the file, so the log reads re
 - Pages updated: Y
 ```
 
-Operations: `ingest` | `query` | `lint` | `schema` | `crystallize`
+Operations: `ingest | query | lint | schema | crystallize | review`.
 
-Parse tip (newest entries): `grep "^## \[" log.md | head -5`
+## Index conventions
 
----
+Sections: Sources | Entities | Concepts | Synthesis | Notes. Each entry: `- [[Page Title]] — one-line description`. Footer: `*Last updated: YYYY-MM-DD. Sources: N | Entities: N | Concepts: N | Synthesis: N | Notes: N*`. Take the counts from `lint.sh`, never from an ad-hoc file count.
 
-## Session Start Protocol
+## Conventions
 
-> [!important] I cannot reliably self-detect a fresh session. The harness auto-injects `CLAUDE.md` and `MEMORY.md`, but there is no clean "first message of a new session" signal, and context can be summarised mid-task. This routine is therefore wrapped in a user-invoked **`/bootup`** command (`~/.claude/commands/bootup.md`), which the user runs first thing each session. If work starts without it, still run steps 1 to 9 before the first substantive action.
+- Address the user by name.
+- Dates are ISO: `YYYY-MM-DD`.
+- Source file names: `Author Year - Short Title.md`. Title case for all other pages.
+- Tags: lowercase, hyphenated.
+- Images: `![[assets/filename.png]]`, never hotlinked.
+- Never summarise what you just did at the end of a response; the log is the record.
 
-1. Read `soul.md` (the disposition file at vault root). This carries the stance — e.g. finish the loop, ship the complete thing, quote-anchoring is non-negotiable, brutal honesty over politeness, no trailing summaries. The rules in this file (`CLAUDE.md`) tell me *what* to do; `soul.md` tells me *how* to be while doing it. Read it every boot, no exceptions.
-2. Read `CLAUDE.md` (this file). ✓
-3. Read `rules.md` (the binding dissertation drafting rules: argument shape, chapter tests, banned-word list, prose mechanics). Read it every boot.
-4. Read `index.md`.
-5. Read the last 5 entries of `log.md` (the recent operations and the most recent **Carried forward** list). Confirm the `MEMORY.md` auto-memory (feedback and project entries) is in view.
-6. **Raw-folder scan.** Glob `raw/**/*.pdf` recursively and diff against `wiki/sources/`. Any PDF without a corresponding source page is a candidate un-ingested source — list filenames (with subfolder prefix) in the greeting. Do not auto-ingest; the user decides. Skip `raw/00-own-drafts-rubric-scratch/` and `raw/99-unclassified/` for un-ingest flagging; those subfolders are user artefacts and untriaged items respectively.
-7. **New-drop scan.** Any PDF sitting at the top level of `raw/` (i.e., directly in `raw/*.pdf`, outside a numbered subfolder) is a *new drop* — treat as an un-ingested candidate and flag in the greeting. After ingesting such a file, relocate it into the appropriate `raw/<NN-theme>/` subfolder as the final step of the INGEST workflow. If the topical fit is ambiguous, leave the file in place and ask the user before moving. If no topic fits, move to `raw/99-unclassified/`.
-8. **Lint freshness check.** If the most recent `## [YYYY-MM-DD] lint` entry in `log.md` is ≥168 hours (7 days) old, run a LINT pass before handling the user's request.
-9. Greet with one-line status: sources ingested, total pages, most recent operation, plus any un-ingested raw files (including new drops at `raw/` top level).
+## What you never do
 
----
-
-## Session End Protocol
-
-When the user ends a session — "end the session", "log all and end session", "wrap up", or any equivalent — run this before closing. Do not skip it. This routine is wrapped in a user-invoked **`/wrapup`** command (`~/.claude/commands/wrapup.md`), the session-end counterpart to `/bootup`.
-
-1. **Run all six audit scripts.** `lint.sh`, `quote-audit.sh`, `verbatim-audit.sh`, `decay.sh 90`, `new-drop.sh`, `freshness.sh`. (`verbatim-audit.sh` re-extracts each cited PDF and confirms every anchored quote is actually present — the only audit that opens the PDF; first run builds a text cache, re-runs are fast. `freshness.sh` reports recently-edited pages whose `updated:` field was not bumped, fixable with `freshness.sh --fix`, plus confirm-decay on non-source pages; it never touches `last_confirmed` or `confidence`.)
-2. **Auto-fix surfaced problems** in the same pass — count drift, phantom wikilinks, unanchored quotes, miscitations, stale citations. Quote-anchor fixes obey the non-negotiable quote-anchoring rule (re-read the PDF, anchor a verbatim quote, no paraphrase, no "within range" fallback). Confirmation is reserved for destructive actions only (deleting or archiving pages or files). Re-run the relevant script to confirm clean.
-3. **Prepend a session-end entry at the top of `log.md`** (newest first): `## [YYYY-MM-DD] review | session end — <pass/fail summary>`. Record the session's operations, the six-script result, and a **Carried forward** list of every open item, unresolved decision, and flagged problem, so the next session starts with the punch list visible.
-4. **Report** the session-end summary and the carried-forward list to the user.
-
----
-
-## Automation Schedule
-
-### Weekly lint (168-hour cadence)
-
-At every session start, compare the current date against the most recent `## [YYYY-MM-DD] lint` entry in `log.md`. If the gap is ≥168 hours, run a LINT pass before doing anything else. This is the weekly health-check commitment; the user does not need to ask.
-
-### Boot-time raw-folder review
-
-At every session start, list `raw/**/*.pdf` (recursive) and diff against `wiki/sources/`. Report any PDF in `raw/01-...` through `raw/09-...` that has no matching source page as a candidate un-ingested source. Report filenames (with subfolder prefix) only; do not auto-ingest. Exclude `raw/00-own-drafts-rubric-scratch/` (user artefacts — never ingest) and `raw/99-unclassified/` (pending triage — flag only if user asks for triage).
-
-### Source-reliability scan (medium effort, bundled into every LINT)
-
-Included in every LINT pass:
-
-1. **Metadata completeness** — each source page has `type`, `tags`, `created`, `updated`, `confidence`, `last_confirmed`, a full citation line with journal/volume/year, and an author wikilink.
-2. **Quote-anchor coverage** — for every in-text page citation appearing in `wiki/synthesis/`, check that the referenced source page's **Quotes** section carries an anchored quote at that page. Flag misses as unresolved verification items.
-3. **Confidence decay** — sources with `last_confirmed` >90 days: reduce confidence by 0.1. Sources with `last_confirmed` >180 days AND confidence <0.5: prepend `> [!note] Stale:`.
-4. **Bibliographic integrity** — missing DOIs, volumes, or incomplete citations flagged as low-priority hygiene.
-5. **Orphan check** — sources with zero inbound wikilinks from concept, entity, or synthesis pages flagged as orphans.
-
-"Medium effort" means: catch obvious gaps, skip exhaustive cross-referencing. Findings go in the LINT log entry, not scattered across source pages, unless the fix is a one-line edit.
-
-### Milestone semantic-drift audit (model-driven, on demand)
-
-The bash scripts and the LINT pass catch string, count, anchor, metadata, and quote drift. They cannot catch *semantic* drift: a live page asserting something about another page's contents that the other page no longer supports (a deleted lit-review clause a gloss still names, a strand reframed from "optional" to "realised", an eligibility line that moved). That requires reading both pages and judging the claim, which is a model job.
-
-The reusable audit is a drift-audit workflow stored under `.claude/workflows/` (invoke with `Workflow({ name: '<your-drift-audit> ' })`; default scope is the dissertation-planning layer, `args.scope` accepts `page`/`drafts`/`synthesis`/`all`). It cross-checks each page's outbound claims against the current contents of the pages it references and adversarially verifies each finding before reporting. It reports only; it never auto-fixes. This is the propagation step the append-only design otherwise leaves to chance.
-
-**Run it as a milestone gate**, not on a cadence: before anything goes to the supervisor, before opening or closing a fieldwork phase, and after editing a heavily-referenced upstream page (methodology, lit review, schedule, ethics). It is token-heavy at `scope: 'all'`; prefer `scope: 'page'` for a single changed page and its dependents.
-
----
-
-## What You Never Do
-
-- Never modify source files (PDFs, docx, root files). Relocating PDFs between the `raw/<NN-theme>/` subfolders is permitted when it reflects a better topical fit; *contents* of PDFs are never edited.
-- Never delete wiki pages without asking first.
-- Never leave a new page unlinked.
-- Never skip updating `index.md` and `log.md`.
-- Never summarize at end of response — the log records it.
-- Never apply supersession silently — always flag it.
-- Never promote a page's tier without confirming it meets the criteria.
-- Never make drive-by edits on pages adjacent to your task. If a query touches `Page A` and you notice prose, formatting, or wikilink issues on linked `Page B`, flag them in the next LINT entry rather than fixing in passing. Every changed line on a page should trace directly to the operation in scope (ingest, query, crystallize). Fixing orphan damage *your own* edits create is fine; cleaning up pre-existing issues is a LINT job.
+- Modify source files (PDFs, docx, archive artefacts). Moving a PDF between `raw/` topic folders is allowed; editing it is not.
+- Delete wiki pages without asking.
+- Leave a new page unlinked, or skip `index.md` and `log.md`.
+- Apply supersession silently.
+- Promote a page's tier without meeting the criteria.
+- Make drive-by edits on pages adjacent to the task; flag them in the next lint entry instead.

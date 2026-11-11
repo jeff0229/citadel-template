@@ -1,0 +1,7 @@
+{
+ "target": 100,
+ "base": 0,
+ "step_ready": 25,
+ "step_target": 30,
+ "history": []
+}

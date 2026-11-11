@@ -1,0 +1,12 @@
+# Creator data never goes in git
+process/results.jsonl
+process/rows.json
+process/rejected.json
+process/target.json
+process/review/
+process/shots/
+process/sheets_*/
+outputs/*.xlsx
+feedback/*.xlsx
+inputs/skip.txt
+__pycache__/

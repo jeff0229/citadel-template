@@ -1,34 +1,46 @@
 #!/usr/bin/env bash
-# Dedicated quote-anchor audit. Every (p.N) citation in Key Points /
-# Connections / Gaps must have a matching (p.N) quote in the Quotes section.
+# Quote-anchor audit, both directions.
+#
+#   PASS 1 (inward)  every (p.N) cited on a source page has a quote anchored at
+#                    that page in the same page's Quotes section.
+#   PASS 2 (outward) every (p.N) cited by a synthesis / concept / entity page is
+#                    anchored in the SOURCE page it cites. This is the direction
+#                    CLAUDE.md calls non-negotiable, and until 2026-07-09 no
+#                    script checked it at all.
+#
+# The bash greps that used to live here mis-parsed comma page lists: `(pp.97, 98)`
+# only ever had page 97 checked. Parsing now lives in quote_audit.py / xref_audit.py.
+#
+# Usage: bash scripts/quote-audit.sh [--quiet] [--xref-only] [--strict]
+#   --strict  also fail on cross-page unanchored citations (default: report them,
+#             exit on PASS 1 only, so the existing wrapup contract is preserved)
 
 . "$(dirname "$0")/lib.sh"
 
-issues=0
-total=0
+require_vault
 
-for f in "$SOURCES_DIR"/*.md; do
-  [ -f "$f" ] || continue
-  total=$((total+1))
-  pages_cited=$(awk '/^## Quotes/{q=1; next} /^## /{q=0} /Full citation:/ {next} !q {print}' "$f" | grep -oP '\(pp?\.\s*\K[0-9]+(?:[-–][0-9]+)?' | sort -u)
-  pages_quoted=$(awk '/^## Quotes/{q=1; next} /^## /{q=0} q {print}' "$f" | grep -oP '\(pp?\.\s*\K[0-9]+(?:[-–][0-9]+)?' | sort -u)
-
-  bad=""
-  for p in $pages_cited; do
-    if ! echo "$pages_quoted" | grep -qxF "$p"; then
-      bad="$bad $p"
-    fi
-  done
-  if [ -n "$bad" ]; then
-    issues=$((issues+1))
-    printf '%s\n  cited but not quoted:%s\n' "$(basename "$f")" "$bad"
-  fi
+QUIET=0; XREF_ONLY=0; STRICT=0
+for a in "$@"; do
+  case "$a" in
+    --quiet) QUIET=1 ;;
+    --xref-only) XREF_ONLY=1 ;;
+    --strict) STRICT=1 ;;
+  esac
 done
 
-echo
-if [ $issues -eq 0 ]; then
-  color_green "[QUOTE-AUDIT] all $total source pages clean."
-else
-  color_red "[QUOTE-AUDIT] $issues of $total source pages have unanchored citations."
-  exit 1
+rc=0
+
+if [ $XREF_ONLY -eq 0 ]; then
+  qa_args=(--vault "$VAULT_ROOT")
+  [ $QUIET -eq 1 ] && qa_args+=(--quiet)
+  python "$(dirname "$0")/quote_audit.py" "${qa_args[@]}" || rc=1
 fi
+
+echo
+python "$(dirname "$0")/xref_audit.py" --vault "$VAULT_ROOT"
+xrc=$?
+if [ $STRICT -eq 1 ] && [ $xrc -ne 0 ]; then
+  rc=1
+fi
+
+exit $rc

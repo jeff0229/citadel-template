@@ -4,9 +4,11 @@
 
 . "$(dirname "$0")/lib.sh" 2>/dev/null || true
 
-# Only fire when inside the vault (avoids firing in other projects).
+# Only fire when the diss vault is the CWD (avoids firing in other projects).
 cwd=$(pwd)
-case "$cwd" in "$VAULT_ROOT"*) ;; *) exit 0 ;; esac
+if [[ "$cwd" != *"Citadel"* ]]; then
+  exit 0
+fi
 
 echo "=== DISS-WIKI SESSION-START ==="
 

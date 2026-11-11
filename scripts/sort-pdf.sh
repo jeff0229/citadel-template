@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # Move a top-level raw/*.pdf into a raw/<NN-topic>/ subfolder.
 # Usage: bash scripts/sort-pdf.sh <pdf_filename> <topic_folder>
-# Topics: your numbered theme folders (e.g. 01-<theme-a>, 02-<theme-b>, ...),
-#         plus 08-methodology-ethics and 99-unclassified. Name them to match
-#         your own literature-review themes.
+# Topics: any raw/<NN-topic>/ folder you created, e.g. 01-<topic>, 02-<topic>, or 99-unclassified
 
 . "$(dirname "$0")/lib.sh"
 

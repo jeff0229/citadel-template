@@ -5,7 +5,9 @@
 . "$(dirname "$0")/lib.sh" 2>/dev/null || true
 
 cwd=$(pwd)
-case "$cwd" in "$VAULT_ROOT"*) ;; *) exit 0 ;; esac
+if [[ "$cwd" != *"Citadel"* ]]; then
+  exit 0
+fi
 
 # Drift check.
 bash "$VAULT_ROOT/scripts/lint.sh" --quiet

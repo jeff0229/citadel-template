@@ -1,9 +1,30 @@
-# OS / editor
+# Your material stays out of git by default. Delete a line only in a private fork.
+
+# OS and editor
 .DS_Store
 Thumbs.db
-# Python
+desktop.ini
+/.obsidian/workspace*.json
+
+# Python and the audit cache
 __pycache__/
 *.pyc
-# Local script cache (regenerated on first audit run)
 scripts/.cache/
 scripts/last-lint.log
+
+# Sources and binaries
+/raw/**/*.pdf
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.mp3
+*.m4a
+
+# Research participant data
+/interviews/
+/assets/fieldwork/

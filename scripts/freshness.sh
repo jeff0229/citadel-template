@@ -11,7 +11,7 @@
 #                     cover sources; this extends the coverage to the synthesis
 #                     and planning layer, where most live drift accumulates.
 #
-# Why the RECENT window: this vault lives in OneDrive, and a bulk re-sync resets
+# Why the RECENT window: a vault in a cloud-synced folder, and a bulk re-sync resets
 # many file mtimes at once (e.g. the 2026-05-14 cluster). Comparing `updated:`
 # against mtime across all history would flag the whole corpus. Restricting to
 # files actually touched in the last few days isolates genuine session edits.
@@ -20,12 +20,14 @@
 # `last_confirmed` or `confidence`; those drive decay and stay human/agent-set.
 # Semantic drift (a claim about another page's contents going stale) is NOT
 # detectable here -> that is the milestone audit's job
-# (the drift-audit workflow under .claude/workflows/).
+# (.claude/workflows/citadel-drift-audit.js).
 #
 # Usage: bash scripts/freshness.sh [--fix] [--quiet] [--recent N] [--grace N] [--decay-days N]
 # Exit:  0 clean / 1 issues found.
 
 . "$(dirname "$0")/lib.sh"
+
+require_vault
 
 fix=0; quiet=0; recent=7; grace=3; decay_days=90
 while [ $# -gt 0 ]; do
@@ -68,7 +70,16 @@ while IFS= read -r f; do
   fi
 
   # Check 2: confirm-decay on non-source pages (sources covered by lint/decay).
-  if [ -n "$lc" ] && [[ "$f" != "$SOURCES_DIR"/* ]]; then
+  #
+  # 2026-09-06: closed domains are exempt. Confirm-decay asks whether a page has
+  # been re-verified against its evidence lately; a domain that closed on
+  # 2026-08-13 cannot drift, so this was reporting the same frozen planning pages
+  # at an ever-growing age every run. Third instance of this pattern today, after
+  # lint.sh and decay.sh. The count is printed rather than swallowed, because an
+  # exemption nobody sees is indistinguishable from a check that never ran.
+  if [ -n "$lc" ] && [[ "$f" != "$SOURCES_DIR"/* ]] && grep -qP '^domain:\s*dissertation\s*$' "$f"; then
+    closed_exempt=$((${closed_exempt:-0}+1))
+  elif [ -n "$lc" ] && [[ "$f" != "$SOURCES_DIR"/* ]]; then
     age=$(days_between "$lc" "$today" 2>/dev/null || echo 0)
     if [ "${age:-0}" -gt "$decay_days" ]; then
       decay_hits=$((decay_hits+1))
@@ -76,6 +87,10 @@ while IFS= read -r f; do
     fi
   fi
 done < <(all_wiki_pages)
+
+if [ "$quiet" -ne 1 ] && [ "${closed_exempt:-0}" -gt 0 ]; then
+  printf '[FRESH] confirm-decay exempt: %s page(s) in closed domain "dissertation"\n' "${closed_exempt:-0}"
+fi
 
 if [ $((lag_hits + decay_hits)) -eq 0 ]; then
   [ "$quiet" -eq 1 ] || color_green "[FRESH] clean: no recent updated-lag, no non-source confirm-decay > ${decay_days}d."

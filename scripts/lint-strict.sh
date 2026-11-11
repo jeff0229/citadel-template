@@ -38,7 +38,12 @@ run_section() {
 
 # Collect all wiki .md files we care about (exclude _archive/).
 wiki_md_files() {
-  find "$VAULT_ROOT/wiki/sources" "$VAULT_ROOT/wiki/entities" "$VAULT_ROOT/wiki/concepts" "$VAULT_ROOT/wiki/synthesis" \
+  # 2026-09-06: wiki/notes was missing from this list. It was added to lib.sh's
+  # all_wiki_pages() and to the index footer when the note type was introduced,
+  # but this second hardcoded copy of the same list was not updated, so every
+  # strict check silently skipped every note. Same shape as the 2026-07-09
+  # finding: a duplicated list is a list that goes stale in one of its copies.
+  find "$VAULT_ROOT/wiki/sources" "$VAULT_ROOT/wiki/entities" "$VAULT_ROOT/wiki/concepts" "$VAULT_ROOT/wiki/synthesis" "$VAULT_ROOT/wiki/notes" \
     -type f -name '*.md' ! -path '*/_archive/*' 2>/dev/null
 }
 

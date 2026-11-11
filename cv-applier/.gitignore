@@ -1,0 +1,10 @@
+# Your real documents and data stay local. Remove a line only if your fork is private.
+data/profile.json
+applications/*/
+data/*.pdf
+data/*.html
+pg-*.png
+lp-*.png
+letterpg-*.png
+__pycache__/
+*.pyc

@@ -18,6 +18,8 @@
 
 . "$(dirname "$0")/lib.sh"
 
+require_vault
+
 PY_ENGINE="$(dirname "$0")/verbatim_audit.py"
 PDFTOTEXT="$(command -v pdftotext || true)"
 if [ -z "$PDFTOTEXT" ]; then
